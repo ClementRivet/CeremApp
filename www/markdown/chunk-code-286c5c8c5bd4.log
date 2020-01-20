@@ -1,0 +1,34 @@
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (MiKTeX 2.9.7250 64-bit) (preloaded format=latex 2020.1.20)  20 JAN 2020 12:48
+entering extended mode
+**C:/Users/33662/AppData/Local/Temp/RtmpSiKcTy/chunk-code-286c5c8c5bd4.txt
+(C:/Users/33662/AppData/Local/Temp/RtmpSiKcTy/chunk-code-286c5c8c5bd4.txt
+LaTeX2e <2019-10-01> patch level 3
+
+! LaTeX Error: Environment align* undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.1 \begin{align*}
+                  
+? 
+! Emergency stop.
+ ...                                              
+                                                  
+l.1 \begin{align*}
+                  
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+ 
+Here is how much of TeX's memory you used:
+ 10 strings out of 492451
+ 488 string characters out of 3129775
+ 58962 words of memory out of 3000000
+ 4468 multiletter control sequences out of 15000+200000
+ 3640 words of font info for 14 fonts, out of 3000000 for 9000
+ 1141 hyphenation exceptions out of 8191
+ 5i,0n,4p,96b,16s stack positions out of 5000i,500n,10000p,200000b,50000s
+No pages of output.

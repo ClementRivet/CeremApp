@@ -2,12 +2,11 @@ server <- function(input, output, session){
   
   # Analysis ----
   if (!interactive()) {
-    
     session$onSessionEnded(function() {
       stopApp()
       q("no")
     })
-  
+  }
   
   observe({if(input$select == "") return(NULL) else load_settings(input$select, session)})
   
@@ -230,8 +229,8 @@ server <- function(input, output, session){
     } else {return(file1$datapath)}
   })
   
-  observeEvent(input$import,{
-    
+  observeEvent(input$imports,{
+    print('hello')
     data_name <- input$data_name
     exp_offset <- input$exp_offset
     time <- input$time
@@ -266,7 +265,7 @@ server <- function(input, output, session){
           text = tags$div(
             align = "center",
             renderDataTable(sweet_msg_verif(length(data_raw), exp_offset, time, orig_file), 
-                            options = list(paging = FALSE, searching = FALSE, pageLength = 4))
+                            options = list(paging = FALSE, searching = FALSE, pageLength = 4, dom = 't'))
           ),
           btn_labels = c("No","Yes"),
           closeOnClickOutside = FALSE
@@ -336,7 +335,7 @@ server <- function(input, output, session){
                label = h5("Experimental conditions"), 
                br(), br(),
                renderDT(processing$expcond,
-                        options = list(paging = FALSE, searching = FALSE, pageLength = 6))
+                        options = list(paging = FALSE, searching = FALSE, pageLength = 6, dom = 't'))
             ),
             
             column(
@@ -504,34 +503,35 @@ server <- function(input, output, session){
     }  
     closeSweetAlert(session)
   })
-
+  
+  output$knitDoc <- renderUI({
+    input$eval
+    HTML(markdown::renderMarkdown(text = isolate(input$rmd), renderer.options = c('mathjax')))#), fragment.only = TRUE, quiet = TRUE))
+    #rstudioapi::viewer(knitr::knit2html(text = isolate(input$rmd), fragment.only = T, quiet = T))
+  })
   
   
   # Close ----
   
-  observeEvent(input$Exit, {
-    confirmSweetAlert(
-      session = session,
-      inputId = "closeconfirmation",
-      type = "info",
-      title = "Exit",
-      text = "Are you sure ?",
-      btn_labels = c("Non",
-                     "Oui"),
-      closeOnClickOutside = FALSE
+  
+  observeEvent(input$exitModal, {
+    showModal(
+      modalDialog(
+        title = "Exit",
+        p("Êtes-vous sur ?"),
+        footer = tagList(
+          modalButton("No"),
+          actionButton("Exit","Yes")
+        )
+      )
     )
-    
-    observeEvent(input$closeconfirmation, {
-      if(isTRUE(input$closeconfirmation)){
-        processing$toProcess <- new.env()
-        
-        js$closeWindow()
-        save.image()
-        stopApp()
-      } 
-    })
   })
   
-  }
+  observeEvent(input$Exit, {
+    processing$toProcess <- new.env()
+    #js$closeWindow()
+    save.image()
+    stopApp()
+  })
   
 }

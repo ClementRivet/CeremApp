@@ -1,8 +1,8 @@
 # Initilization ----
-
+options(shiny.maxRequestSize=100*1024^2)
 # .RData exist and empty
-if(file.exists(paste0(getwd(),"/app/.RData"))){
-  load(file = paste0(getwd(),"/app/.RData"), envir = .GlobalEnv)
+if(file.exists(paste0(getwd(),"/.RData"))){
+  load(file = paste0(getwd(),"/.RData"), envir = .GlobalEnv)
   if(is.null(length(.GlobalEnv))){
     # Analysis environment ----
     .GlobalEnv$toAnalysis <- new.env()
@@ -29,7 +29,7 @@ if(file.exists(paste0(getwd(),"/app/.RData"))){
 }
 
 # .RData doesn't exist 
-if(!file.exists(paste0(getwd(),"/app/.RData"))){
+if(!file.exists(paste0(getwd(),"/.RData"))){
   # Analysis environment ----
   .GlobalEnv$toAnalysis <- new.env()
   .GlobalEnv$toAnalysis$plots <- new.env()
