@@ -80,46 +80,70 @@ ui <- dashboardPagePlus(
         rel = "icon", 
         type = "image/x-icon", 
         href = "images/icon_cerema.ico"
-      )
+      ),
+      tags$script('
+      // Define function to set height of "map" and "map_container"
+      setHeight = function() {
+        var window_height = $(window).height();
+        var header_height = $(".main-header").height();
+
+        var boxHeight = window_height - header_height - 80;
+
+        $("#map_container").height(boxHeight);
+        $("#map").height(boxHeight - 20);
+      };
+
+      // Set input$box_height when the connection is established
+      $(document).on("shiny:connected", function(event) {
+        setHeight();
+      });
+
+      // Refresh the box height on every window resize event    
+      $(window).on("resize", function(){
+        setHeight();
+      });
+    ')
     ),
     
     tabItems(
       tabItem(
         "lg",
         width = 12,
-        
-        dropdown(
-          
-          tags$h3("Update your logbook :"),
-          
-          # Les données sont en constantes évolution, il est donc nécessaire de pouvoir en importer
-          textInput("nom_date","", placeholder = "Example : July 1, 2019"),
-          fileInput("jdb","", multiple = FALSE),
-          textOutput("import_new_jb"),
-          actionButton("go_actua", "Actualisation")
-        ),
-        #includeMarkdown("www/markdown/presentation.md")
-        includeHTML("www/html/presentation.html"),
-        
         fluidPage(
-          h1("Shiny Ace knitr Example"),
-          fluidRow(
-            column(
-              6,
-              h2("Source R-Markdown"),
-              aceEditor("rmd", mode = "markdown", value = init),
-              actionButton("eval", "Update")
-            ),
-            column(
-              6,
-              h2("Knitted Output"),
-              box(
-                width = 12,
-                htmlOutput("knitDoc")
+          dropdown(
+            
+            tags$h3("Update your logbook :"),
+            
+            # Les données sont en constantes évolution, il est donc nécessaire de pouvoir en importer
+            textInput("nom_date","", placeholder = "Example : July 1, 2019"),
+            fileInput("jdb","", multiple = FALSE),
+            textOutput("import_new_jb"),
+            actionButton("go_actua", "Actualisation")
+          ),
+          #includeMarkdown("www/markdown/presentation.md")
+          includeHTML("www/html/presentation.html"),
+          
+          fluidPage(
+            h1("Shiny Ace knitr Example"),
+            fluidRow(
+              column(
+                6,
+                h2("Source R-Markdown"),
+                aceEditor("rmd", mode = "markdown", value = init),
+                actionButton("eval", "Update")
+              ),
+              column(
+                6,
+                h2("Knitted Output"),
+                box(
+                  width = 12,
+                  htmlOutput("knitDoc")
+                )
               )
             )
           )
         )
+        
       ),
       
       tabItem(
@@ -181,7 +205,7 @@ ui <- dashboardPagePlus(
         ),
         
         box(
-          "Delete a dataset",
+          title = "Delete a dataset",
           pickerInput(
             inputId = "delete",
             label = "",
@@ -199,23 +223,15 @@ ui <- dashboardPagePlus(
       tabItem(
         "man",
         box(
-          title = tagList(
-            "Treatment",
-            dropdown( 
-              tags$h4("Importing from data raw"),
-              tags$p("1. Select a data set. (A table of the parameters of your data as well as a summary of your treatments will appear)"),
-              tags$p("2. Select the processing parameters."),
-              tags$p("   2.1 Common offset : Distance in source and sensors"),
-              tags$p("   2.2 Step : For the loop, allows to process several common offset at the same time"),
-              tags$p("   2.3 If you wish to process only one common offset, converge the ends of the interval at one point."),
-              tags$p("3. Select the options if you wish. (By default, signals will be normalized by the maximum value of the seismic shot.)"),
-              tags$p("4. Warning! Warning! With each processing performed, data with the same common offset will be overwritten by the new ones."),
-              circle = TRUE, status = NULL,
-              icon = icon("info"), width = "300px",
-              
-              tooltip = tooltipOptions(title = "About the processing")
-            )
-          ),
+          title = "Treatment",
+          #   dropdown( 
+          #     includeHTML('www/html/importation.html'),
+          #     circle = TRUE, status = NULL,
+          #     icon = icon("info"), width = "450px",
+          #     
+          #     tooltip = tooltipOptions(title = "About the processing")
+          #   )
+          # ),
           width = 12,
           
         br(),  
@@ -293,21 +309,39 @@ ui <- dashboardPagePlus(
           
           mainPanel(
             width = 9,
-            align = "center",
-            column(12,
-                   wellPanel(
-                     uiOutput("plots_dataset")
-                   )
+            box(
+              id = "map_container",
+              width = 12,
+              uiOutput("plots_dataset")
             )
+            
           )
         )
       ),
       
       tabItem(
         "help",
-        box(
+        fluidRow(
           width = 12,
-          includeMarkdown("www/markdown/help.md")
+          box(
+            title = "Fonctionnement général de l'application",
+            collapsible = T,
+            solidHeader = T,
+            collapsed = T,
+            status = "warning",
+            width = 12,
+            includeMarkdown("www/markdown/help.md"),
+            img(style="display: block; margin-left: auto; margin-right: auto;", src="../images/help menu.png")
+          ),
+          box(
+            title = "Analyser vos données",
+            solidHeader = T,
+            collapsible = T,
+            collapsed = T,
+            status = "warning",
+            width = 12,
+            includeMarkdown("www/markdown/help2.md")
+          )
         )
       )
     )

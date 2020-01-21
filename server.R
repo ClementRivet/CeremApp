@@ -19,7 +19,7 @@ server <- function(input, output, session){
     select <- input$select
 
     if(select == "") 
-      tags$h1("No processing has been carried out")
+      tags$h3("No processing has been carried out")
     else {
       
       if(length(toAnalysis$offset_treated$Common_Offset) == 0){
@@ -67,6 +67,10 @@ server <- function(input, output, session){
   pfft <- reactive({input$plot_fft})
   
   output$plots_dataset <- renderUI({
+    
+    if(input$select == ""){
+      return(HTML('<img style="display: block; margin-left: auto; margin-right: auto; vertical-align: middle; justify-content: center;" src="/images/Logo_CEREMA.png" alt="No processing has been carried out" />'))
+    }
     # Ne sert à rien de faire comme ça pour la liste car ça ajoute les plots, les uns sur les autres
     poc <- poc(); pfft <- pfft(); 
     tot_plot <- length(poc) + length(pfft)
@@ -85,7 +89,7 @@ server <- function(input, output, session){
     }
     
     if(isTRUE(length(tot_plot) == 0)){
-      return(NULL)
+      return(HTML('<img style="display: block; margin-left: auto; margin-right: auto;" src="/images/Logo_CEREMA.png" alt="No processing has been carried out" />'))
     }
     
     switch(tot_plot,
@@ -193,13 +197,8 @@ server <- function(input, output, session){
                  )
                )
              )
-           },
-           {tagList(
-             renderImage({
-               list(src ="Logo_CEREMA.png",
-                    with = "300")
-             }, deleteFile = FALSE)
-           )}
+           }
+           
     )
 })
   
@@ -320,7 +319,7 @@ server <- function(input, output, session){
   output$processing_data <- renderUI({
     process <- process()
     if(process == ""){
-      tags$h1("No processing has been carried out")
+      HTML('<center><img src="/images/Logo_CEREMA.png" alt="No processing has been carried out" /></center>')
     } else {
         .GlobalEnv$processing$expcond <- data.frame(read.table(paste0(settings$datapath,toString(process()), "/exp_conditions")))
 
@@ -528,6 +527,13 @@ server <- function(input, output, session){
   })
   
   observeEvent(input$Exit, {
+    showModal(
+      modalDialog(
+        title = "Sauvegarde en cours",
+        p("Veuillez patienter, je sauvegarde vos travaux !"),
+        footer = NULL
+      )
+    )
     processing$toProcess <- new.env()
     #js$closeWindow()
     save.image()
