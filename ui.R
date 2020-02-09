@@ -1,18 +1,18 @@
 source(paste0(getwd(),"/init.R"))
 source(paste0(getwd(),"/app/global.R"))
 
-init <- "### Sample knitr Doc
-This is some markdown text. It may also have embedded R code
-which will be executed.
-```{r}
-2*3
-rnorm(5)
-```
-It can even include graphical elements.
-```{r}
-hist(rnorm(100))
-```
-"
+# init <- "### Sample knitr Doc
+# This is some markdown text. It may also have embedded R code
+# which will be executed.
+# ```{r}
+# 2*3
+# rnorm(5)
+# ```
+# It can even include graphical elements.
+# ```{r}
+# hist(rnorm(100))
+# ```
+# "
 
 ui <- dashboardPagePlus(
   skin = "yellow",
@@ -62,7 +62,7 @@ ui <- dashboardPagePlus(
       br(),
       menuItem("Data analysis", tabName = "da", icon = icon("fas fa-chart-line")),
       menuItem("Data sets", tabName = "dsets", icon = icon("fas fa-database"),
-               menuSubItem("Import & Delete", "ImDel"),
+               menuSubItem("Import & Delete", "Import_Delete"),
                menuSubItem("Manage", "man")),
       menuItem("Logbook", tabName = "lg", icon = icon("fas fa-book")),
       menuItem("Help", tabName = "help", icon = icon("fas fa-question-circle"))
@@ -121,33 +121,33 @@ ui <- dashboardPagePlus(
             actionButton("go_actua", "Actualisation")
           ),
           #includeMarkdown("www/markdown/presentation.md")
-          includeHTML("www/html/presentation.html"),
+          includeHTML("www/html/presentation.html")
           
-          fluidPage(
-            h1("Shiny Ace knitr Example"),
-            fluidRow(
-              column(
-                6,
-                h2("Source R-Markdown"),
-                aceEditor("rmd", mode = "markdown", value = init),
-                actionButton("eval", "Update")
-              ),
-              column(
-                6,
-                h2("Knitted Output"),
-                box(
-                  width = 12,
-                  htmlOutput("knitDoc")
-                )
-              )
-            )
-          )
+          # fluidPage(
+          #   h1("Shiny Ace knitr Example"),
+          #   fluidRow(
+          #     column(
+          #       6,
+          #       h2("Source R-Markdown"),
+          #       aceEditor("rmd", mode = "markdown", value = init),
+          #       actionButton("eval", "Update")
+          #     ),
+          #     column(
+          #       6,
+          #       h2("Knitted Output"),
+          #       box(
+          #         width = 12,
+          #         htmlOutput("knitDoc")
+          #       )
+          #     )
+          #   )
+          # )
         )
         
       ),
       
       tabItem(
-        "ImDel",
+        "Import_Delete",
         box(
           fluidRow(
             "Importing from data raw",

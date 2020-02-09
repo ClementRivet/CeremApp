@@ -503,11 +503,11 @@ server <- function(input, output, session){
     closeSweetAlert(session)
   })
   
-  output$knitDoc <- renderUI({
-    input$eval
-    HTML(markdown::renderMarkdown(text = isolate(input$rmd), renderer.options = c('mathjax')))#), fragment.only = TRUE, quiet = TRUE))
-    #rstudioapi::viewer(knitr::knit2html(text = isolate(input$rmd), fragment.only = T, quiet = T))
-  })
+  # output$knitDoc <- renderUI({
+  #   input$eval
+  #   HTML(knitr::knit2html(text = isolate(input$rmd), fragment.only = TRUE, quiet = TRUE))
+  #   #rstudioapi::viewer(knitr::knit2html(text = isolate(input$rmd), fragment.only = T, quiet = T))
+  # })
   
   
   # Close ----
